@@ -17,8 +17,11 @@ function App() {
   React.useEffect(() => {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/login/check_have_token`).then((response) => {
       setLogged(response.data);
+      // navigate("/");
     });
   }, []);
+
+  console.log(logged);
 
   console.log(process.env.REACT_APP_BACKEND_URL);
   return (

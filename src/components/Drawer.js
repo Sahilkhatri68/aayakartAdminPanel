@@ -57,6 +57,7 @@ import Notifications from "./dashboard/Notifications";
 import Tags from "./dashboard/Tags";
 import Pages from "./dashboard/page/Pages";
 import AddPage from "./dashboard/page/AddPage";
+import ViewProduct from "./dashboard/ViewProduct";
 
 const drawerWidth = 220;
 
@@ -372,6 +373,8 @@ export default function MiniDrawer() {
           <Route path="/posts/create" element={<AddPost />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/update-product/:id" element={<UpdateProduct />} />
+          <Route path="/view-product/:id" element={<ViewProduct />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/coupons" element={<Coupons />} />
@@ -383,7 +386,6 @@ export default function MiniDrawer() {
           <Route path="/customization" element={<Customization />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/add-product" element={<NewProduct />} />
-          <Route path="/products/:id" element={<UpdateProduct />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/pages" element={<Pages />} />
           <Route path="/pages/create" element={<AddPage />} />

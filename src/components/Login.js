@@ -16,6 +16,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
+//Axios allow auth 
+axios.defaults.withCredentials = true;
+//Axios Header
+axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("token");
+
+
 
 export default function Login() {
   const handleSubmit = (event) => {
@@ -45,11 +51,12 @@ export default function Login() {
         password: password,
       })
       .then((res) => {
+        console.log(res);
         setAlert(res.data.message, res);
         setStatus(res.data.status);
         setOpen(true);
         //Redirect to home page if login is successful
-        navigate("/");
+        // navigate("/");
       })
       .catch((e) => {
         setAlert(e.response.data.message);

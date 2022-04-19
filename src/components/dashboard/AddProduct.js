@@ -23,7 +23,6 @@ import MuiAlert from "@mui/material/Alert";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import Snackbar from "@mui/material/Snackbar";
 import slugify from "slugify";
-import Autocomplete from '@mui/material/Autocomplete';
 
 import { Link as RouterLink } from "react-router-dom";
 
@@ -83,8 +82,10 @@ export default function NewProduct() {
   const [productTitle, setProductTitle] = React.useState("");
   const [productDescription, setProductDescription] = React.useState("");
   const [productCategory, setProductCategory] = React.useState("");
-  const [productGallery, setProductGallery] = React.useState("");
-  const [featuredImage, setFeaturedImage] = React.useState("");
+  const [productGallery, setProductGallery] = React.useState([]);
+  const [featuredImage, setFeaturedImage] = React.useState(
+    "https://i.pinimg.com/originals/54/3b/5b/543b5b21eac1cbae1f00ea336a51dd7d.gif"
+  );
   const [regularPrice, setRegularPrice] = React.useState("");
   const [salePrice, setSalePrice] = React.useState("");
   const [reviews, setReviews] = React.useState(false);
@@ -97,25 +98,37 @@ export default function NewProduct() {
   const [server_alert, setAlert] = React.useState();
   const [status, setStatus] = React.useState();
   const [alertOpen, setAlertOpen] = React.useState(false);
+  const [files, setFiles] = React.useState([]);
+
+  //Axios Files get request
+  React.useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/files/uploaded_files`)
+      .then((response) => {
+        setFiles(response.data);
+      });
+  }, []);
+
+  console.log(files);
 
   //Generate Slug
   const slug = slugify(productTitle, {
     replacement: "-", // replace spaces with replacement
     remove: null, // regex to remove characters
     lower: true, // result in lower case
-    remove: /[*+~.()'"!:@#/]/g,
+    remove: /[*+~.()'"!:@#/?]/g,
   });
 
   // Set Featured Image
-  const productGalleryHandleChange = (e) => {
-    if (e.target.files) {
-      const productGallery = Array.from(e.target.files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setProductGallery(productGallery);
-      console.log(productGallery);
-    }
-  };
+  // const productGalleryHandleChange = (e) => {
+  //   if (e.target.files) {
+  //     const productGallery = Array.from(e.target.files).map((file) =>
+  //       URL.createObjectURL(file)
+  //     );
+  //     setProductGallery(productGallery);
+  //     console.log(productGallery);
+  //   }
+  // };
 
   const handleReviewsChange = () => {
     setReviews(!reviews);
@@ -129,6 +142,24 @@ export default function NewProduct() {
     setPrivate(!isprivate);
   };
 
+  const productGal = [
+    {
+      id: 1,
+      src: "https://i.pinimg.com/originals/54/3b/5b/543b5b21eac1cbae1f00ea336a51dd7d.gif",
+    },
+    {
+      id: 2,
+      src: "https://i.pinimg.com/originals/54/3b/5b/543b5b21eac1cbae1f00ea336a51dd7d.gif",
+    },
+    {
+      id: 3,
+      src: "https://i.pinimg.com/originals/54/3b/5b/543b5b21eac1cbae1f00ea336a51dd7d.gif",
+    },
+    {
+      id: 4,
+      src: "https://i.pinimg.com/originals/54/3b/5b/543b5b21eac1cbae1f00ea336a51dd7d.gif",
+    },
+  ]
   //Create Product
   function createPost() {
     axios
@@ -138,7 +169,7 @@ export default function NewProduct() {
         productDescription,
         productCategory,
         tags,
-        productGallery,
+        productGallery: productGal,
         featuredImage,
         regularPrice,
         salePrice,
@@ -402,7 +433,7 @@ export default function NewProduct() {
                                 variant="filled"
                                 key={value}
                                 label={value}
-                                color="info"
+                                color="error"
                               />
                             ))}
                           </Box>
@@ -430,41 +461,14 @@ export default function NewProduct() {
                         ))}
                       </Select>
 
-                      {/* Upload */}
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <label htmlFor="contained-button-files">
-                          <Button
-                            variant="contained"
-                            component="span"
-                            size="small"
-                            sx={{
-                              backgroundColor: "#333333",
-                              marginTop: 2,
-                              marginBottom: 2,
-                              boxShadow: 0,
-                            }}
-                          >
-                            <input
-                              accept="image/*"
-                              id="contained-button-files"
-                              type="file"
-                              multiple
-                              onChange={productGalleryHandleChange}
-                              sx={{ display: "none" }}
-                            />
-                            Gallery
-                          </Button>
-                        </label>
-                      </Stack>
-
                       {/* Image List */}
-                      <ImageList
+                      {/* <ImageList
                         sx={{ width: "100%", height: 200 }}
                         cols={5}
                         row={1}
                         rowHeight={200}
                       >
-                        {itemData.map((item) => (
+                        {productGallery.map((item) => (
                           <ImageListItem key={item.id}>
                             <img
                               src={productGallery}
@@ -473,7 +477,49 @@ export default function NewProduct() {
                             />
                           </ImageListItem>
                         ))}
-                      </ImageList>
+                      </ImageList> */}
+
+                      <Select
+                        hiddenLabel
+                        id="demo-multiple-chip"
+                        multiple
+                        value={productGallery}
+                        onChange={(e) => setProductGallery(e.target.value)}
+                        renderValue={(selected) => (
+                          <ImageList
+                            sx={{ width: "100%", height: 200 }}
+                            cols={5}
+                            row={1}
+                            rowHeight={200}
+                          >
+                            {selected.map((value) => (
+                              <ImageListItem key={value.id}>
+                                <img src={value} loading="lazy" alt="" />
+                              </ImageListItem>
+                            ))}
+                          </ImageList>
+                        )}
+                        MenuProps={MenuProps}
+                        size="small"
+                        sx={{
+                          marginTop: 2,
+                          width: "100%",
+                          background: "#333333",
+                        }}
+                        inputProps={{
+                          style: { color: "white" },
+                        }}
+                      >
+                        {files.map((name) => (
+                          <MenuItem
+                            key={name.id}
+                            value={name.path}
+                            size="small"
+                          >
+                            {name.path}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </Item>
                   </Grid>
                 </Grid>
@@ -485,14 +531,15 @@ export default function NewProduct() {
                         height="100%"
                         width="100%"
                         src={featuredImage}
-                        image={featuredImage}
-                        alt=""
+                        alt="Featured Image"
                         sx={{
                           cursor: "pointer",
                           backgroundSize: "cover",
                           backgroundRepeat: "no-repeat",
                           backgroundPosition: "center",
                           backgroundColor: "#333333",
+                          border: "none",
+                          outline: "none",
                         }}
                       />
                     </Card>
@@ -510,11 +557,6 @@ export default function NewProduct() {
                         outline: "none",
                         height: 40,
                         marginTop: 1,
-                        ":hover": {
-                          background: "#333333",
-                          color: "white",
-                          outline: "none",
-                        },
                       }}
                       inputProps={{
                         style: { color: "white", outline: "none" },
@@ -727,31 +769,3 @@ export default function NewProduct() {
     </Box>
   );
 }
-
-const itemData = [
-  {
-    id: 1,
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-    title: "Breakfast",
-  },
-  {
-    id: 2,
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-    title: "Burger",
-  },
-  {
-    id: 3,
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-    title: "Camera",
-  },
-  {
-    id: 4,
-    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-    title: "Coffee",
-  },
-  {
-    id: 5,
-    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-    title: "Hats",
-  },
-];

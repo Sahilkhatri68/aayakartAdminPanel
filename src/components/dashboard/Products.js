@@ -17,7 +17,6 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Grid from "@mui/material/Grid";
-import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { styled } from "@mui/material/styles";
@@ -26,34 +25,18 @@ import Rating from "@mui/material/Rating";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import RemoveRedEyeTwoToneIcon from "@mui/icons-material/RemoveRedEyeTwoTone";
 import GetAppTwoToneIcon from "@mui/icons-material/GetAppTwoTone";
-import Dialog from "@mui/material/Dialog";
-import AppBar from "@mui/material/AppBar";
 import CloseIcon from "@mui/icons-material/Close";
-import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useTheme } from "@mui/material/styles";
-import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import Stack from "@mui/material/Stack";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 
 import {
   Link as RouterLink,
-  Route,
-  Routes,
-  useLocation,
-  Outlet,
-  useNavigate,
 } from "react-router-dom";
-
 
 //Html Tooltip
 const HtmlTooltip = styled(({ className, ...props }) => (
@@ -74,6 +57,7 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "left",
   color: "#fff",
   backgroundColor: "#1A2027",
+  borderRadius: "0px",
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -258,7 +242,10 @@ const EnhancedTableToolbar = (props) => {
       {/* View Product */}
       {numSelected === 1 ? (
         <Tooltip title="View">
-          <IconButton sx={{ color: "#fff" }}>
+          <IconButton sx={{ color: "#fff" }}
+           to={`./../view-product/${window.selected}`}
+           component={RouterLink}
+           >
             <RemoveRedEyeTwoToneIcon />
           </IconButton>
         </Tooltip>
@@ -270,7 +257,7 @@ const EnhancedTableToolbar = (props) => {
       {numSelected === 1 ? (
         <Tooltip title="Edit" sx={{ color: "#fff" }}>
           <IconButton
-            to={`./../products/${window.selected}`}
+            to={`./../update-product/${window.selected}`}
             component={RouterLink}
           >
             <EditTwoToneIcon />
@@ -314,35 +301,7 @@ const MenuProps = {
   },
 };
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-  "Ralph Hubbarda",
-  "Omar Alexandera",
-  "Carlos Abbotta",
-  "Miriam Wagnera",
-  "Bradley Wilkersona",
-  "Virginia Andrewsa",
-  "Kelly Snydera",
-];
 
-function getStyles(name, tags, theme) {
-  return {
-    fontWeight:
-      tags.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-// End Tags
 
 export default function Products() {
   const [order, setOrder] = React.useState("asc");
@@ -549,7 +508,7 @@ export default function Products() {
 
   //Edit Product
   const editProduct = (id) => {
-    axios.get(`http://localhost:4000/products/${id}`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/products/${id}`).then((response) => {
       setProductTitle(response.data.title);
       setProductDescription(response.data.description);
       setProductCategory(response.data.category);
@@ -625,7 +584,7 @@ export default function Products() {
 
       <Grid container spacing={2} sx={{ marginBottom: 1 }}>
         <Grid item xs={12}>
-          <Item sx={{ boxShadow: 0, display: "flex" }}>
+          <Item sx={{ boxShadow: 0, display: "flex", background: "#1A2027" }}>
             <Button
               to="./../add-product"
               component={RouterLink}
@@ -635,7 +594,7 @@ export default function Products() {
                 mr: 2,
                 display: { xs: "none", md: "flex" },
                 boxShadow: 0,
-                background: "#333333",
+                background: "#000000",
               }}
             >
               Add New Product
@@ -645,7 +604,7 @@ export default function Products() {
             <Tooltip title="Export Products Data">
               <IconButton
                 size="small"
-                sx={{ background: "#dbdbdb", width: 30, height: 30 }}
+                sx={{ background: "#1A2A3C", width: 30, height: 30, color: "white" }}
               >
                 <GetAppTwoToneIcon />
               </IconButton>

@@ -39,14 +39,16 @@ export default function CORS() {
 
   //Axios Get
   function getCorsData() {
-    axios.get(corsAPI).then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/cors`).then((res) => {
       setCors(res.data);
     });
   }
 
+  console.log(cors); 
+
   //Axios get
   function getSettingsData() {
-    axios.get(SettingsURL).then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/cors`).then((res) => {
       setId(res.data[0]._id);
       console.log(res.data[0]._id);
     });
@@ -60,7 +62,7 @@ export default function CORS() {
   //Axios Delete CORS
   function deleteCors(cors) {
     axios
-      .delete(`${corsAPI}/${id}/${cors._id}`)
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/cors/${id}/${cors._id}`)
       .then((res) => {
         getCorsData();
         setAlert("CORS URL deleted");
@@ -78,7 +80,7 @@ export default function CORS() {
   const addCors = (e) => {
     e.preventDefault();
     axios
-      .post(`${corsAPI}/${id}`, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/cors/${id}`, {
         url: corsUrl,
       })
       .then((res) => {

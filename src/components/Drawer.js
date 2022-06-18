@@ -310,7 +310,7 @@ export default function MiniDrawer() {
                 alignItems: "center",
               }}
             >
-              Dauswap
+              Logo
             </Typography>
           </DrawerHeader>
         </Toolbar>

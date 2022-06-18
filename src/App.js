@@ -26,7 +26,8 @@ function App() {
   console.log(process.env.REACT_APP_BACKEND_URL);
   return (
     <div className="App">
-      {logged ? <MiniDrawer/> : <Login/>}
+      {/* {logged ? <MiniDrawer/> : <Login/>} */}
+      <MiniDrawer/>
     </div>
   );
 }
